@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan</title>
+
+<style>
+:root{
+  --col-width:300px;
+  --col-gap:30px;
+}
+
+/* RESET */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:22%;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.materi-header{
+  background:#ffffffcc;
+  border-radius:12px;
+  padding:12px;
+  font-weight:700;
+  text-align:center;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  text-align:left;
+}
+button.active{
+  outline:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.5);
+}
+
+/* WARNA TOMBOL */
+.pemantik{background:#2980b9;}
+.kontekstual{background:#8e44ad;}
+.tujuan{background:#16a085;}
+.aktivitas{background:#e67e22;}
+.konsep{background:#27ae60;}
+.contoh{background:#3498db;}
+.latihan{background:#d35400;}
+.refleksi{background:#c0392b;}
+.nav{background:#34495e;}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+}
+
+/* ✅ 2 KOLOM */
+.content{
+  height:600px;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  column-count:2;
+  column-gap:var(--col-gap);
+  column-fill:auto;
+  background:#fff;
+}
+
+/* SECTION */
+.section{
+  break-inside:avoid;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+}
+.section h3{margin:0 0 8px;}
+
+/* WARNA SECTION */
+.section.pemantik{background:#eaf3fb;}
+.section.kontekstual{background:#f3eafd;}
+.section.tujuan{background:#e9f7f1;}
+.section.aktivitas{background:#fef3e6;}
+.section.konsep{background:#eafaf1;}
+.section.contoh{background:#ebf5fb;}
+.section.latihan{background:#fdf2e9;}
+.section.refleksi{background:#fdecea;}
+
+.section p{
+  margin:6px 0;
+  font-size:20px;
+  line-height:1.2;
+}
+
+/* GAMBAR */
+.step-img{
+  width:100%;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:14px;
+  right:20px;
+  font-weight:700;
+  color:rgba(0,0,0,.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+  <div class="materi-header">📘 Materi 9</div>
+
+  <button class="pemantik active">💡 Pemantik</button>
+  <button class="kontekstual">🌍 Kontekstual</button>
+  <button class="tujuan">🎯 Tujuan</button>
+  <button class="aktivitas">📚 Aktivitas</button>
+  <button class="konsep">🧠 Konsep</button>
+  <button class="contoh">✍️ Contoh</button>
+  <button class="latihan">📝 Latihan</button>
+  <button class="refleksi">🔍 Refleksi</button>
+
+  <button class="nav" onclick="prevCol()">◀ Back</button>
+  <button class="nav" onclick="nextCol()"> Next ▶</button>
+</div>
+
+<div class="main">
+  <div class="watermark" id="wm">Kolom 1–2</div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<script>
+/* DATA MATERI */
+
+const materi = [
+  {
+    id: 'pemantik',
+    title: '💡 Pemantik',
+    color: 'pemantik',
+    text: [
+      'Pernahkah kamu menghitung isi air dalam tangki, drum, atau galon di rumah?',
+      'Mengapa menurutmu dalam situasi tertentu kita perlu menghitung volume, sedangkan pada situasi lain menghitung luas permukaan?'
+    ]
+  },
+  {
+    id: 'kontekstual',
+    title: '🌍 Penerapan Kontekstual',
+    color: 'kontekstual',
+    text: [
+      'Menentukan kapasitas air yang dapat ditampung oleh tangki atau drum berbentuk tabung.',
+      'Menghitung luas permukaan benda yang akan dicat atau dibungkus, seperti bola atau tabung.',
+      'Menentukan banyaknya bahan yang dibutuhkan untuk membuat wadah atau kemasan.',
+      'Menafsirkan hasil perhitungan volume atau luas permukaan dalam konteks penggunaan sehari-hari.'
+    ]
+  },
+  {
+    id: 'tujuan',
+    title: '🎯 Tujuan Pembelajaran',
+    color: 'tujuan',
+    text: [
+      'Siswa mampu menyelesaikan masalah nyata yang melibatkan perhitungan volume dan luas permukaan tabung, kerucut, dan bola, serta menginterpretasikan hasilnya dalam konteks kehidupan sehari-hari.'
+    ]
+  },
+  {
+    id: 'aktivitas',
+    title: '📚 Aktivitas Inti',
+    color: 'aktivitas',
+    text: [
+      'Mengamati beberapa permasalahan kontekstual yang berkaitan dengan volume dan luas permukaan bangun sisi lengkung.',
+      'Berdiskusi dalam kelompok untuk menentukan informasi yang diketahui dan ditanyakan.',
+      'Mengerjakan latihan pemecahan masalah secara bertahap dan sistematis.',
+      'Menyampaikan hasil penyelesaian dan mendiskusikan cara menafsirkan hasilnya bersama teman.'
+    ]
+  },
+  {
+    id: 'konsep',
+    title: '🧠 Pemahaman Konsep',
+    color: 'konsep',
+    text: [
+      'Dalam masalah nyata, kita perlu memilih apakah menggunakan volume atau luas permukaan.',
+      'Gunakan volume jika berkaitan dengan isi atau kapasitas suatu benda.',
+      'Gunakan luas permukaan jika berkaitan dengan pembungkus, cat, atau pelapisan suatu benda.',
+      'Pemahaman ini membantu menentukan rumus yang tepat dalam menyelesaikan masalah.'
+    ]
+  },
+  {
+    id: 'contoh',
+    title: '✍️ Contoh Soal',
+    color: 'contoh',
+    text: [
+      'Contoh Soal 1 (Volume Tabung):',
+      'r = 50 cm, t = 120 cm',
+      'V = π × 50² × 120 = 942.000 cm³ ≈ 942 liter',
+      'Contoh Soal 2 (Luas Permukaan Bola):',
+      'r = 14 cm',
+      'L = 4πr² = 4 × π × 14² = 2.463 cm²',
+      'Contoh Soal 3 (Volume Kerucut):',
+      'r = 3 cm, t = 10 cm',
+      'V = 1/3 × π × 3² × 10 = 94,2 cm³'
+    ]
+  },
+  {
+    id: 'latihan',
+    title: '📝 Latihan Soal',
+    color: 'latihan',
+    text: [
+      'Drum berdiameter 60 cm dan tinggi 100 cm. Hitung kapasitasnya dalam liter.',
+      'Sebuah bola berjari-jari 10 cm. Hitung luas permukaan yang akan dibungkus.',
+      'Kerucut dengan r = 5 cm dan t = 12 cm. Hitung volumenya dan jelaskan artinya untuk wadah.'
+    ]
+  },
+  {
+    id: 'refleksi',
+    title: '🔍 Refleksi Pembelajaran',
+    color: 'refleksi',
+    text: [
+      'Bagaimana menentukan kapan menggunakan volume atau luas permukaan?',
+      'Apa contoh penggunaan volume dan luas permukaan dalam kehidupan sehari-hari?',
+      'Apa kesulitan dalam memahami soal kontekstual dan bagaimana mengatasinya?'
+    ]
+  }
+];
+
+let iMateri=0,iStep=0;
+const container=document.getElementById('content');
+
+/* AKTIF TOMBOL */
+function setActiveButton(id){
+ document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+ document.querySelector('.'+id)?.classList.add('active');
+}
+
+/* MAJU */
+
+function showNext(){
+ if(iMateri >= materi.length) return;
+
+ const m = materi[iMateri];
+ let s = document.getElementById(m.id);
+
+ if(!s){
+  s = document.createElement('div');
+  s.className = `section ${m.color}`;
+  s.id = m.id;
+  s.innerHTML = `<h3>${m.title}</h3>`;
+  container.appendChild(s);
+  setActiveButton(m.id);
+ }
+
+ if(iStep < m.text.length){
+  const raw = m.text[iStep++];
+
+  // ✅ AMBIL SEMUA GAMBAR [[img:...]]
+  const imgs = [...raw.matchAll(/\[\[img:(.+?)\]\]/g)];
+
+  // ✅ AMBIL TEKS TANPA IMG
+  const txt = raw.replace(/\[\[img:.+?\]\]/g,'').trim();
+
+  // ✅ TAMPILKAN TEKS
+  if(txt){
+   const p = document.createElement('p');
+   p.textContent = txt;
+   s.appendChild(p);
+  }
+
+  // ✅ TAMPILKAN GAMBAR
+  imgs.forEach(match=>{
+   const img = document.createElement('img');
+   img.src = match[1];           // contoh: img/1.jpg
+   img.className = 'step-img';
+   img.loading = 'lazy';
+   img.onerror = ()=>{
+     img.alt = 'Gambar tidak ditemukan: ' + match[1];
+   };
+   s.appendChild(img);
+  });
+
+ }else{
+  iMateri++;
+  iStep = 0;
+  showNext();
+ }
+}
+
+
+/* MUNDUR */
+function showPrev(){
+ if(iMateri<0) return;
+ const m=materi[iMateri];
+ const s=document.getElementById(m.id);
+ if(s && s.children.length>1){
+  s.removeChild(s.lastElementChild);
+  iStep--;
+  setActiveButton(m.id);
+ }else if(iMateri>0){
+  iMateri--;
+  iStep=materi[iMateri].text.length;
+  showPrev();
+ }
+}
+
+/* NAV */
+function nextCol(){showNext();}
+function prevCol(){showPrev();}
+
+/* TAP = MAJU */
+document.addEventListener('pointerup',e=>{
+ if(!e.target.closest('button')) showNext();
+});
+</script>
+
+</body>
+</html>

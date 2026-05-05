@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan</title>
+
+<style>
+:root{
+  --col-width:300px;
+  --col-gap:30px;
+}
+
+/* RESET */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:22%;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.materi-header{
+  background:#ffffffcc;
+  border-radius:12px;
+  padding:12px;
+  font-weight:700;
+  text-align:center;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  text-align:left;
+}
+button.active{
+  outline:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.5);
+}
+
+/* WARNA TOMBOL */
+.pemantik{background:#2980b9;}
+.kontekstual{background:#8e44ad;}
+.tujuan{background:#16a085;}
+.aktivitas{background:#e67e22;}
+.konsep{background:#27ae60;}
+.contoh{background:#3498db;}
+.latihan{background:#d35400;}
+.refleksi{background:#c0392b;}
+.nav{background:#34495e;}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+}
+
+/* ✅ 2 KOLOM */
+.content{
+  height:600px;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  column-count:2;
+  column-gap:var(--col-gap);
+  column-fill:auto;
+  background:#fff;
+}
+
+/* SECTION */
+.section{
+  break-inside:avoid;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+}
+.section h3{margin:0 0 8px;}
+
+/* WARNA SECTION */
+.section.pemantik{background:#eaf3fb;}
+.section.kontekstual{background:#f3eafd;}
+.section.tujuan{background:#e9f7f1;}
+.section.aktivitas{background:#fef3e6;}
+.section.konsep{background:#eafaf1;}
+.section.contoh{background:#ebf5fb;}
+.section.latihan{background:#fdf2e9;}
+.section.refleksi{background:#fdecea;}
+
+.section p{
+  margin:6px 0;
+  font-size:20px;
+  line-height:1.2;
+}
+
+/* GAMBAR */
+.step-img{
+  width:100%;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:14px;
+  right:20px;
+  font-weight:700;
+  color:rgba(0,0,0,.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+  <div class="materi-header">📘 Materi 19</div>
+
+  <button class="pemantik active">💡 Pemantik</button>
+  <button class="kontekstual">🌍 Kontekstual</button>
+  <button class="tujuan">🎯 Tujuan</button>
+  <button class="aktivitas">📚 Aktivitas</button>
+  <button class="konsep">🧠 Konsep</button>
+  <button class="contoh">✍️ Contoh</button>
+  <button class="latihan">📝 Latihan</button>
+  <button class="refleksi">🔍 Refleksi</button>
+
+  <button class="nav" onclick="prevCol()">◀ Back</button>
+  <button class="nav" onclick="nextCol()"> Next ▶</button>
+</div>
+
+<div class="main">
+  <div class="watermark" id="wm">Kolom 1–2</div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<script>
+/* DATA MATERI */
+
+const materi = [
+  {
+    id: 'pemantik',
+    title: '💡 Pemantik',
+    color: 'pemantik',
+    text: [
+      'Pernahkah kamu memindahkan suatu gambar lalu memutarnya dan mendapatkan hasil yang berbeda?',
+      'Mengapa menurutmu urutan melakukan perubahan posisi atau bentuk dapat memengaruhi hasil akhir?'
+    ]
+  },
+  {
+    id: 'kontekstual',
+    title: '🌍 Penerapan Kontekstual',
+    color: 'kontekstual',
+    text: [
+      'Mengamati pergerakan karakter dalam game yang berpindah sekaligus berputar.',
+      'Memahami proses pengeditan gambar yang melibatkan geser, putar, dan ubah ukuran.',
+      'Melihat perubahan posisi logo atau objek desain setelah beberapa langkah transformasi.',
+      'Menafsirkan gerakan benda pada simulasi atau animasi yang dilakukan bertahap.'
+    ]
+  },
+  {
+    id: 'tujuan',
+    title: '🎯 Tujuan Pembelajaran',
+    color: 'tujuan',
+    text: [
+      'Siswa dapat melakukan gabungan dua atau lebih transformasi geometri (refleksi, translasi, rotasi, dilatasi) dan menentukan hasil akhir dari transformasi tersebut secara sistematis.'
+    ]
+  },
+  {
+    id: 'aktivitas',
+    title: '📚 Aktivitas Inti',
+    color: 'aktivitas',
+    text: [
+      'Mengamati contoh bangun yang mengalami dua atau lebih transformasi secara berurutan.',
+      'Berdiskusi dalam kelompok untuk menentukan urutan transformasi yang terjadi.',
+      'Mengerjakan latihan gabungan transformasi pada titik atau bangun datar.',
+      'Membandingkan hasil antar kelompok dan mendiskusikan pengaruh urutan transformasi.'
+    ]
+  },
+  {
+    id: 'konsep',
+    title: '🧠 Pemahaman Konsep',
+    color: 'konsep',
+    text: [
+      'Gabungan transformasi adalah penerapan lebih dari satu jenis transformasi secara berurutan terhadap titik atau bangun datar.',
+      'Urutan transformasi penting: hasil akhir tergantung pada urutan transformasi.',
+      'Contoh gabungan umum:',
+      'Translasi → Rotasi',
+      'Refleksi → Dilatasi',
+      'Rotasi → Translasi → Refleksi'
+    ]
+  },
+  {
+    id: 'contoh',
+    title: '✍️ Contoh Soal',
+    color: 'contoh',
+    text: [
+      'Contoh Soal 1: Translasi lalu Refleksi:',
+      'Titik A(2, 3) ditranslasikan oleh vektor (4, -1), lalu direfleksikan terhadap sumbu x.',
+      'Langkah 1: Translasi → A\' = (6, 2)',
+      'Langkah 2: Refleksi terhadap sumbu x → A\'\' = (6, -2)',
+      'Contoh Soal 2: Rotasi lalu Dilatasi:',
+      'Titik B(-1, 2) diputar 180° terhadap titik pusat (0, 0), lalu didilatasi dengan faktor skala 2.',
+      'Langkah 1: Rotasi 180° → B\' = (1, -2)',
+      'Langkah 2: Dilatasi → B\'\' = (2, -4)'
+    ]
+  },
+  {
+    id: 'latihan',
+    title: '📝 Latihan Soal',
+    color: 'latihan',
+    text: [
+      'Titik C(3, -2) ditranslasikan oleh vektor (-2, 3), lalu diputar 90° berlawanan arah jarum jam terhadap titik pusat. Tentukan koordinat hasil akhir.',
+      'Titik D(-4, 1) direfleksikan terhadap sumbu y, lalu didilatasi dengan faktor skala 0.5. Tentukan koordinat hasil akhir.',
+      'Bangun segitiga dengan titik-titik E(1, 1), F(3, 1), dan G(2, 3) diputar 180°, lalu ditranslasikan oleh vektor (2, -1). Tentukan koordinat bayangan akhir masing-masing titik.',
+      'Jelaskan bagaimana urutan transformasi memengaruhi hasil akhir dan berikan contoh.'
+    ]
+  },
+  {
+    id: 'refleksi',
+    title: '🔍 Refleksi Pembelajaran',
+    color: 'refleksi',
+    text: [
+      'Apa tantangan yang kamu hadapi saat menggabungkan dua transformasi?',
+      'Bagaimana kamu memastikan urutan transformasi dilakukan dengan benar?'
+    ]
+  }
+];
+
+let iMateri=0,iStep=0;
+const container=document.getElementById('content');
+
+/* AKTIF TOMBOL */
+function setActiveButton(id){
+ document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+ document.querySelector('.'+id)?.classList.add('active');
+}
+
+/* MAJU */
+
+function showNext(){
+ if(iMateri >= materi.length) return;
+
+ const m = materi[iMateri];
+ let s = document.getElementById(m.id);
+
+ if(!s){
+  s = document.createElement('div');
+  s.className = `section ${m.color}`;
+  s.id = m.id;
+  s.innerHTML = `<h3>${m.title}</h3>`;
+  container.appendChild(s);
+  setActiveButton(m.id);
+ }
+
+ if(iStep < m.text.length){
+  const raw = m.text[iStep++];
+
+  // ✅ AMBIL SEMUA GAMBAR [[img:...]]
+  const imgs = [...raw.matchAll(/\[\[img:(.+?)\]\]/g)];
+
+  // ✅ AMBIL TEKS TANPA IMG
+  const txt = raw.replace(/\[\[img:.+?\]\]/g,'').trim();
+
+  // ✅ TAMPILKAN TEKS
+  if(txt){
+   const p = document.createElement('p');
+   p.textContent = txt;
+   s.appendChild(p);
+  }
+
+  // ✅ TAMPILKAN GAMBAR
+  imgs.forEach(match=>{
+   const img = document.createElement('img');
+   img.src = match[1];           // contoh: img/1.jpg
+   img.className = 'step-img';
+   img.loading = 'lazy';
+   img.onerror = ()=>{
+     img.alt = 'Gambar tidak ditemukan: ' + match[1];
+   };
+   s.appendChild(img);
+  });
+
+ }else{
+  iMateri++;
+  iStep = 0;
+  showNext();
+ }
+}
+
+
+/* MUNDUR */
+function showPrev(){
+ if(iMateri<0) return;
+ const m=materi[iMateri];
+ const s=document.getElementById(m.id);
+ if(s && s.children.length>1){
+  s.removeChild(s.lastElementChild);
+  iStep--;
+  setActiveButton(m.id);
+ }else if(iMateri>0){
+  iMateri--;
+  iStep=materi[iMateri].text.length;
+  showPrev();
+ }
+}
+
+/* NAV */
+function nextCol(){showNext();}
+function prevCol(){showPrev();}
+
+/* TAP = MAJU */
+document.addEventListener('pointerup',e=>{
+ if(!e.target.closest('button')) showNext();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan</title>
+
+<style>
+:root{
+  --col-width:300px;
+  --col-gap:30px;
+}
+
+/* RESET */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:22%;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.materi-header{
+  background:#ffffffcc;
+  border-radius:12px;
+  padding:12px;
+  font-weight:700;
+  text-align:center;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  text-align:left;
+}
+button.active{
+  outline:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.5);
+}
+
+/* WARNA TOMBOL */
+.pemantik{background:#2980b9;}
+.kontekstual{background:#8e44ad;}
+.tujuan{background:#16a085;}
+.aktivitas{background:#e67e22;}
+.konsep{background:#27ae60;}
+.contoh{background:#3498db;}
+.latihan{background:#d35400;}
+.refleksi{background:#c0392b;}
+.nav{background:#34495e;}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+}
+
+/* ✅ 2 KOLOM */
+.content{
+  height:600px;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  column-count:2;
+  column-gap:var(--col-gap);
+  column-fill:auto;
+  background:#fff;
+}
+
+/* SECTION */
+.section{
+  break-inside:avoid;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+}
+.section h3{margin:0 0 8px;}
+
+/* WARNA SECTION */
+.section.pemantik{background:#eaf3fb;}
+.section.kontekstual{background:#f3eafd;}
+.section.tujuan{background:#e9f7f1;}
+.section.aktivitas{background:#fef3e6;}
+.section.konsep{background:#eafaf1;}
+.section.contoh{background:#ebf5fb;}
+.section.latihan{background:#fdf2e9;}
+.section.refleksi{background:#fdecea;}
+
+.section p{
+  margin:6px 0;
+  font-size:20px;
+  line-height:1.2;
+}
+
+/* GAMBAR */
+.step-img{
+  width:100%;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:14px;
+  right:20px;
+  font-weight:700;
+  color:rgba(0,0,0,.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+  <div class="materi-header">📘 Materi 12</div>
+
+  <button class="pemantik active">💡 Pemantik</button>
+  <button class="kontekstual">🌍 Kontekstual</button>
+  <button class="tujuan">🎯 Tujuan</button>
+  <button class="aktivitas">📚 Aktivitas</button>
+  <button class="konsep">🧠 Konsep</button>
+  <button class="contoh">✍️ Contoh</button>
+  <button class="latihan">📝 Latihan</button>
+  <button class="refleksi">🔍 Refleksi</button>
+
+  <button class="nav" onclick="prevCol()">◀ Back</button>
+  <button class="nav" onclick="nextCol()"> Next ▶</button>
+</div>
+
+<div class="main">
+  <div class="watermark" id="wm">Kolom 1–2</div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<script>
+/* DATA MATERI */
+
+const materi = [
+  {
+    id: 'pemantik',
+    title: '💡 Pemantik',
+    color: 'pemantik',
+    text: [
+      'Pernahkah kamu membaca laporan sederhana tentang suatu produk atau bangunan di sekitarmu?',
+      'Mengapa menurutmu menuliskan hasil pengamatan dan perhitungan itu penting untuk dibagikan kepada orang lain?'
+    ]
+  },
+  {
+    id: 'kontekstual',
+    title: '🌍 Penerapan Kontekstual',
+    color: 'kontekstual',
+    text: [
+      'Membuat laporan sederhana tentang tangki air berbentuk tabung di rumah atau sekolah.',
+      'Menjelaskan penggunaan bentuk kerucut pada corong atau menara.',
+      'Menguraikan fungsi bentuk bola pada lampu atau peralatan olahraga.',
+      'Menyajikan hasil pengamatan bangun ruang dalam bentuk tulisan yang runtut dan jelas.'
+    ]
+  },
+  {
+    id: 'tujuan',
+    title: '🎯 Tujuan Pembelajaran',
+    color: 'tujuan',
+    text: [
+      'Siswa mampu menyusun laporan sederhana yang menjelaskan penerapan bangun ruang sisi lengkung (tabung, kerucut, dan bola) dalam bidang desain, konstruksi, atau teknologi secara sistematis.'
+    ]
+  },
+  {
+    id: 'aktivitas',
+    title: '📚 Aktivitas Inti',
+    color: 'aktivitas',
+    text: [
+      'Mengamati contoh laporan sederhana tentang penerapan bangun ruang sisi lengkung.',
+      'Berdiskusi dalam kelompok untuk menentukan struktur dan isi laporan.',
+      'Menyusun laporan sederhana berdasarkan contoh atau data yang diberikan.',
+      'Menyampaikan laporan dan memberikan tanggapan terhadap hasil teman.'
+    ]
+  },
+  {
+    id: 'konsep',
+    title: '🧠 Pemahaman Konsep',
+    color: 'konsep',
+    text: [
+      'Laporan sederhana berisi:',
+      'Identifikasi topik atau masalah.',
+      'Penjelasan konsep matematika.',
+      'Contoh penerapan dalam kehidupan nyata.',
+      'Kesimpulan dan refleksi.',
+      'Bangun ruang sisi lengkung digunakan dalam:',
+      'Desain produk (botol, kaleng, lampu).',
+      'Konstruksi (tangki air, menara).',
+      'Teknologi (helm, radar).'
+    ]
+  },
+  {
+    id: 'contoh',
+    title: '✍️ Contoh Soal',
+    color: 'contoh',
+    text: [
+      'Contoh Laporan:',
+      'Judul: Penerapan Tabung pada Tangki Air',
+      'Pendahuluan: Tangki air digunakan untuk menyimpan air dalam jumlah besar.',
+      'Isi:',
+      'Volume menggunakan V = πr²t.',
+      'Luas permukaan menggunakan L = 2πr(r + t).',
+      'Contoh: r = 0,5 m dan t = 2 m → volume ≈ 1,57 m³.',
+      'Kesimpulan: Tabung efisien untuk penyimpanan dan mudah dihitung.'
+    ]
+  },
+  {
+    id: 'latihan',
+    title: '📝 Latihan Soal',
+    color: 'latihan',
+    text: [
+      'Buat laporan tentang penggunaan bentuk kerucut pada corong atau menara.',
+      'Buat laporan tentang penggunaan bentuk bola dalam teknologi.',
+      'Bandingkan efisiensi tabung dan kerucut dalam sebuah laporan sederhana.'
+    ]
+  },
+  {
+    id: 'refleksi',
+    title: '🔍 Refleksi Pembelajaran',
+    color: 'refleksi',
+    text: [
+      'Bagaimana bentuk bangun ruang memengaruhi fungsi dan efisiensi desain?',
+      'Apa kesulitan dalam menyusun laporan dan bagaimana mengatasinya?',
+      'Bagaimana cara menyampaikan konsep matematika agar mudah dipahami?'
+    ]
+  }
+];
+
+let iMateri=0,iStep=0;
+const container=document.getElementById('content');
+
+/* AKTIF TOMBOL */
+function setActiveButton(id){
+ document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+ document.querySelector('.'+id)?.classList.add('active');
+}
+
+/* MAJU */
+
+function showNext(){
+ if(iMateri >= materi.length) return;
+
+ const m = materi[iMateri];
+ let s = document.getElementById(m.id);
+
+ if(!s){
+  s = document.createElement('div');
+  s.className = `section ${m.color}`;
+  s.id = m.id;
+  s.innerHTML = `<h3>${m.title}</h3>`;
+  container.appendChild(s);
+  setActiveButton(m.id);
+ }
+
+ if(iStep < m.text.length){
+  const raw = m.text[iStep++];
+
+  // ✅ AMBIL SEMUA GAMBAR [[img:...]]
+  const imgs = [...raw.matchAll(/\[\[img:(.+?)\]\]/g)];
+
+  // ✅ AMBIL TEKS TANPA IMG
+  const txt = raw.replace(/\[\[img:.+?\]\]/g,'').trim();
+
+  // ✅ TAMPILKAN TEKS
+  if(txt){
+   const p = document.createElement('p');
+   p.textContent = txt;
+   s.appendChild(p);
+  }
+
+  // ✅ TAMPILKAN GAMBAR
+  imgs.forEach(match=>{
+   const img = document.createElement('img');
+   img.src = match[1];           // contoh: img/1.jpg
+   img.className = 'step-img';
+   img.loading = 'lazy';
+   img.onerror = ()=>{
+     img.alt = 'Gambar tidak ditemukan: ' + match[1];
+   };
+   s.appendChild(img);
+  });
+
+ }else{
+  iMateri++;
+  iStep = 0;
+  showNext();
+ }
+}
+
+
+/* MUNDUR */
+function showPrev(){
+ if(iMateri<0) return;
+ const m=materi[iMateri];
+ const s=document.getElementById(m.id);
+ if(s && s.children.length>1){
+  s.removeChild(s.lastElementChild);
+  iStep--;
+  setActiveButton(m.id);
+ }else if(iMateri>0){
+  iMateri--;
+  iStep=materi[iMateri].text.length;
+  showPrev();
+ }
+}
+
+/* NAV */
+function nextCol(){showNext();}
+function prevCol(){showPrev();}
+
+/* TAP = MAJU */
+document.addEventListener('pointerup',e=>{
+ if(!e.target.closest('button')) showNext();
+});
+</script>
+
+</body>
+</html>

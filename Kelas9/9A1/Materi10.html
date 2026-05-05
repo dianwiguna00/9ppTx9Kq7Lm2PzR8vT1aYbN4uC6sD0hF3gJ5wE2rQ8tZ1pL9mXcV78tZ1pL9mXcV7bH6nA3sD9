@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan</title>
+
+<style>
+:root{
+  --col-width:300px;
+  --col-gap:30px;
+}
+
+/* RESET */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:22%;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.materi-header{
+  background:#ffffffcc;
+  border-radius:12px;
+  padding:12px;
+  font-weight:700;
+  text-align:center;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  text-align:left;
+}
+button.active{
+  outline:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.5);
+}
+
+/* WARNA TOMBOL */
+.pemantik{background:#2980b9;}
+.kontekstual{background:#8e44ad;}
+.tujuan{background:#16a085;}
+.aktivitas{background:#e67e22;}
+.konsep{background:#27ae60;}
+.contoh{background:#3498db;}
+.latihan{background:#d35400;}
+.refleksi{background:#c0392b;}
+.nav{background:#34495e;}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+}
+
+/* ✅ 2 KOLOM */
+.content{
+  height:600px;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  column-count:2;
+  column-gap:var(--col-gap);
+  column-fill:auto;
+  background:#fff;
+}
+
+/* SECTION */
+.section{
+  break-inside:avoid;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+}
+.section h3{margin:0 0 8px;}
+
+/* WARNA SECTION */
+.section.pemantik{background:#eaf3fb;}
+.section.kontekstual{background:#f3eafd;}
+.section.tujuan{background:#e9f7f1;}
+.section.aktivitas{background:#fef3e6;}
+.section.konsep{background:#eafaf1;}
+.section.contoh{background:#ebf5fb;}
+.section.latihan{background:#fdf2e9;}
+.section.refleksi{background:#fdecea;}
+
+.section p{
+  margin:6px 0;
+  font-size:20px;
+  line-height:1.2;
+}
+
+/* GAMBAR */
+.step-img{
+  width:100%;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:14px;
+  right:20px;
+  font-weight:700;
+  color:rgba(0,0,0,.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+  <div class="materi-header">📘 Materi 10</div>
+
+  <button class="pemantik active">💡 Pemantik</button>
+  <button class="kontekstual">🌍 Kontekstual</button>
+  <button class="tujuan">🎯 Tujuan</button>
+  <button class="aktivitas">📚 Aktivitas</button>
+  <button class="konsep">🧠 Konsep</button>
+  <button class="contoh">✍️ Contoh</button>
+  <button class="latihan">📝 Latihan</button>
+  <button class="refleksi">🔍 Refleksi</button>
+
+  <button class="nav" onclick="prevCol()">◀ Back</button>
+  <button class="nav" onclick="nextCol()"> Next ▶</button>
+</div>
+
+<div class="main">
+  <div class="watermark" id="wm">Kolom 1–2</div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<script>
+/* DATA MATERI */
+
+const materi = [
+  {
+    id: 'pemantik',
+    title: '💡 Pemantik',
+    color: 'pemantik',
+    text: [
+      'Pernahkah kamu melihat angka yang sangat besar atau sangat kecil sehingga sulit dibaca jika ditulis biasa?',
+      'Mengapa menurutmu ilmuwan dan teknisi sering menuliskan bilangan dengan bentuk khusus seperti 10 berpangkat?'
+    ]
+  },
+  {
+    id: 'kontekstual',
+    title: '🌍 Penerapan Kontekstual',
+    color: 'kontekstual',
+    text: [
+      'Membaca jarak antarbenda langit, jumlah penduduk, atau kapasitas penyimpanan digital.',
+      'Menuliskan ukuran sangat kecil seperti ketebalan rambut atau ukuran sel.',
+      'Memahami data ilmiah pada buku IPA, berita sains, atau teknologi.',
+      'Menyederhanakan penulisan bilangan agar lebih ringkas dan mudah dibandingkan.'
+    ]
+  },
+  {
+    id: 'tujuan',
+    title: '🎯 Tujuan Pembelajaran',
+    color: 'tujuan',
+    text: [
+      'Siswa dapat menuliskan dan membaca bilangan sangat besar atau sangat kecil dalam bentuk notasi ilmiah serta menggunakannya dalam konteks kehidupan nyata.'
+    ]
+  },
+  {
+    id: 'aktivitas',
+    title: '📚 Aktivitas Inti',
+    color: 'aktivitas',
+    text: [
+      'Mengamati contoh bilangan sangat besar dan sangat kecil dari berbagai sumber.',
+      'Berdiskusi dalam kelompok tentang alasan penggunaan notasi ilmiah.',
+      'Mengerjakan latihan mengubah bilangan ke dan dari notasi ilmiah.',
+      'Membahas hasil latihan dan menanggapi jawaban teman secara aktif.'
+    ]
+  },
+  {
+    id: 'konsep',
+    title: '🧠 Pemahaman Konsep',
+    color: 'konsep',
+    text: [
+      '1. Apa itu Notasi Ilmiah:',
+      'Notasi ilmiah adalah cara menuliskan bilangan sangat besar atau sangat kecil dengan menggunakan bilangan berpangkat 10.',
+      'a × 10ⁿ, dengan 1 ≤ a < 10 dan n bilangan bulat.',
+      '2. Contoh Bilangan Besar:',
+      '5.600.000 = 5.6 × 10⁶',
+      '300.000.000 = 3 × 10⁸',
+      '3. Contoh Bilangan Kecil:',
+      '0.00045 = 4.5 × 10⁻⁴',
+      '0.00000012 = 1.2 × 10⁻⁷'
+    ]
+  },
+  {
+    id: 'contoh',
+    title: '✍️ Contoh Soal',
+    color: 'contoh',
+    text: [
+      'Contoh Soal 1:',
+      'Ubah 72.000.000 ke dalam notasi ilmiah.',
+      'Penyelesaian:',
+      '72.000.000 = 7.2 × 10⁷',
+      'Contoh Soal 2:',
+      'Ubah 0.0000063 ke dalam notasi ilmiah.',
+      'Penyelesaian:',
+      '0.0000063 = 6.3 × 10⁻⁶',
+      'Contoh Soal 3:',
+      'Hitung:',
+      '(3 × 10⁴) + (2 × 10⁴)',
+      'Penyelesaian:',
+      '(3 + 2) × 10⁴ = 5 × 10⁴'
+    ]
+  },
+  {
+    id: 'latihan',
+    title: '📝 Latihan Soal',
+    color: 'latihan',
+    text: [
+      'Ubah ke notasi ilmiah:',
+      'a. 4.500.000',
+      'b. 0.00082',
+      'c. 120.000.000',
+      'Ubah dari notasi ilmiah ke bentuk biasa:',
+      'a. 6.1 × 10⁵',
+      'b. 3.2 × 10⁻³',
+      'Hitung hasil dari:',
+      'a. (4 × 10⁶) + (6 × 10⁶)',
+      'b. (5 × 10⁻⁴) × (2 × 10²)'
+    ]
+  },
+  {
+    id: 'refleksi',
+    title: '🔍 Refleksi Pembelajaran',
+    color: 'refleksi',
+    text: [
+      'Mengapa notasi ilmiah penting dalam ilmu pengetahuan dan teknologi?',
+      'Dalam situasi apa kamu pernah melihat atau menggunakan notasi ilmiah?'
+    ]
+  }
+];
+
+let iMateri=0,iStep=0;
+const container=document.getElementById('content');
+
+/* AKTIF TOMBOL */
+function setActiveButton(id){
+ document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+ document.querySelector('.'+id)?.classList.add('active');
+}
+
+/* MAJU */
+
+function showNext(){
+ if(iMateri >= materi.length) return;
+
+ const m = materi[iMateri];
+ let s = document.getElementById(m.id);
+
+ if(!s){
+  s = document.createElement('div');
+  s.className = `section ${m.color}`;
+  s.id = m.id;
+  s.innerHTML = `<h3>${m.title}</h3>`;
+  container.appendChild(s);
+  setActiveButton(m.id);
+ }
+
+ if(iStep < m.text.length){
+  const raw = m.text[iStep++];
+
+  // ✅ AMBIL SEMUA GAMBAR [[img:...]]
+  const imgs = [...raw.matchAll(/\[\[img:(.+?)\]\]/g)];
+
+  // ✅ AMBIL TEKS TANPA IMG
+  const txt = raw.replace(/\[\[img:.+?\]\]/g,'').trim();
+
+  // ✅ TAMPILKAN TEKS
+  if(txt){
+   const p = document.createElement('p');
+   p.textContent = txt;
+   s.appendChild(p);
+  }
+
+  // ✅ TAMPILKAN GAMBAR
+  imgs.forEach(match=>{
+   const img = document.createElement('img');
+   img.src = match[1];           // contoh: img/1.jpg
+   img.className = 'step-img';
+   img.loading = 'lazy';
+   img.onerror = ()=>{
+     img.alt = 'Gambar tidak ditemukan: ' + match[1];
+   };
+   s.appendChild(img);
+  });
+
+ }else{
+  iMateri++;
+  iStep = 0;
+  showNext();
+ }
+}
+
+
+/* MUNDUR */
+function showPrev(){
+ if(iMateri<0) return;
+ const m=materi[iMateri];
+ const s=document.getElementById(m.id);
+ if(s && s.children.length>1){
+  s.removeChild(s.lastElementChild);
+  iStep--;
+  setActiveButton(m.id);
+ }else if(iMateri>0){
+  iMateri--;
+  iStep=materi[iMateri].text.length;
+  showPrev();
+ }
+}
+
+/* NAV */
+function nextCol(){showNext();}
+function prevCol(){showPrev();}
+
+/* TAP = MAJU */
+document.addEventListener('pointerup',e=>{
+ if(!e.target.closest('button')) showNext();
+});
+</script>
+
+</body>
+</html>

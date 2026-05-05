@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan</title>
+
+<style>
+:root{
+  --col-width:300px;
+  --col-gap:30px;
+}
+
+/* RESET */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+/* LAYOUT */
+.layout{
+  display:flex;
+  gap:14px;
+  padding:14px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:22%;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.materi-header{
+  background:#ffffffcc;
+  border-radius:12px;
+  padding:12px;
+  font-weight:700;
+  text-align:center;
+}
+button{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  text-align:left;
+}
+button.active{
+  outline:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.5);
+}
+
+/* WARNA TOMBOL */
+.pemantik{background:#2980b9;}
+.kontekstual{background:#8e44ad;}
+.tujuan{background:#16a085;}
+.aktivitas{background:#e67e22;}
+.konsep{background:#27ae60;}
+.contoh{background:#3498db;}
+.latihan{background:#d35400;}
+.refleksi{background:#c0392b;}
+.nav{background:#34495e;}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+}
+
+/* ✅ 2 KOLOM */
+.content{
+  height:600px;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  column-count:2;
+  column-gap:var(--col-gap);
+  column-fill:auto;
+  background:#fff;
+}
+
+/* SECTION */
+.section{
+  break-inside:avoid;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+}
+.section h3{margin:0 0 8px;}
+
+/* WARNA SECTION */
+.section.pemantik{background:#eaf3fb;}
+.section.kontekstual{background:#f3eafd;}
+.section.tujuan{background:#e9f7f1;}
+.section.aktivitas{background:#fef3e6;}
+.section.konsep{background:#eafaf1;}
+.section.contoh{background:#ebf5fb;}
+.section.latihan{background:#fdf2e9;}
+.section.refleksi{background:#fdecea;}
+
+.section p{
+  margin:6px 0;
+  font-size:20px;
+  line-height:1.2;
+}
+
+/* GAMBAR */
+.step-img{
+  width:100%;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  bottom:14px;
+  right:20px;
+  font-weight:700;
+  color:rgba(0,0,0,.15);
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+  <div class="materi-header">📘 Materi 2</div>
+
+  <button class="pemantik active">💡 Pemantik</button>
+  <button class="kontekstual">🌍 Kontekstual</button>
+  <button class="tujuan">🎯 Tujuan</button>
+  <button class="aktivitas">📚 Aktivitas</button>
+  <button class="konsep">🧠 Konsep</button>
+  <button class="contoh">✍️ Contoh</button>
+  <button class="latihan">📝 Latihan</button>
+  <button class="refleksi">🔍 Refleksi</button>
+
+  <button class="nav" onclick="prevCol()">◀ Back</button>
+  <button class="nav" onclick="nextCol()"> Next ▶</button>
+</div>
+
+<div class="main">
+  <div class="watermark" id="wm">Kolom 1–2</div>
+  <div class="content" id="content"></div>
+</div>
+
+</div>
+
+<script>
+/* DATA MATERI */
+
+const materi = [
+  {
+    id: 'pemantik',
+    title: '💡 Pemantik',
+    color: 'pemantik',
+    text: [
+      'Pernahkah kamu melihat penulisan angka seperti 10⁶ atau 10⁻³ pada data sains, teknologi, atau media?',
+      'Mengapa menurutmu satu bilangan berpangkat bisa ditulis dengan cara berbeda tetapi tetap memiliki makna yang sama?'
+    ]
+  },
+  {
+    id: 'kontekstual',
+    title: '🌍 Penerapan Kontekstual',
+    color: 'kontekstual',
+    text: [
+      'Membaca jarak antarkota, ukuran populasi, atau kapasitas data yang ditulis dalam bentuk bilangan berpangkat.',
+      'Memahami penggunaan pangkat negatif pada ukuran yang sangat kecil, seperti ketebalan benda atau ukuran mikro.',
+      'Menyederhanakan perhitungan berulang pada angka besar agar lebih mudah dibaca dan dihitung.',
+      'Menggunakan aturan pangkat untuk mempercepat perhitungan dalam teknologi dan ilmu pengetahuan.'
+    ]
+  },
+  {
+    id: 'tujuan',
+    title: '🎯 Tujuan Pembelajaran',
+    color: 'tujuan',
+    text: [
+      'Siswa dapat mengidentifikasi dan menggunakan sifat-sifat bilangan berpangkat bulat positif dan negatif dalam menyelesaikan masalah.'
+    ]
+  },
+  {
+    id: 'aktivitas',
+    title: '📚 Aktivitas Inti',
+    color: 'aktivitas',
+    text: [
+      'Mengamati contoh bilangan berpangkat positif dan negatif yang ditampilkan guru atau dari sumber belajar.',
+      'Berdiskusi dalam kelompok untuk menemukan pola perubahan hasil saat operasi bilangan berpangkat dilakukan.',
+      'Mengerjakan latihan terstruktur untuk menerapkan sifat-sifat bilangan berpangkat.',
+      'Membandingkan dan membahas hasil pekerjaan antar kelompok secara aktif.'
+    ]
+  },
+  {
+    id: 'konsep',
+    title: '🧠 Pemahaman Konsep',
+    color: 'konsep',
+    text: [
+      '1. Bilangan Berpangkat Bulat Positif:',
+      'Jika a adalah bilangan real dan n adalah bilangan bulat positif, maka:',
+      'aⁿ = a × a × ... × a',
+      '(n kali)',
+      '2. Bilangan Berpangkat Bulat Negatif:',
+      'Jika a ≠ 0 dan n adalah bilangan bulat positif, maka:',
+      'a⁻ⁿ = 1 / aⁿ',
+      '3. Sifat-Sifat Penting:',
+      'aᵐ × aⁿ = aᵐ⁺ⁿ',
+      'aᵐ / aⁿ = aᵐ⁻ⁿ',
+      '(aᵐ)ⁿ = aᵐ × ⁿ',
+      'a⁰ = 1 (untuk a ≠ 0)',
+      'a⁻ⁿ = 1 / aⁿ'
+    ]
+  },
+  {
+    id: 'contoh',
+    title: '✍️ Contoh Soal',
+    color: 'contoh',
+    text: [
+      'Contoh Soal 1: Pangkat Positif:',
+      'Hitung hasil dari 5³ × 5²',
+      'Penyelesaian:',
+      '5³ × 5² = 5³⁺² = 5⁵ = 3125',
+      'Contoh Soal 2: Pangkat Negatif:',
+      'Sederhanakan 2⁻³ / 2⁻¹',
+      'Penyelesaian:',
+      '2⁻³ / 2⁻¹ = 2⁻³ − (−1) = 2⁻² = 1 / 2² = 1/4'
+    ]
+  },
+  {
+    id: 'latihan',
+    title: '📝 Latihan Soal',
+    color: 'latihan',
+    text: [
+      'Sederhanakan:',
+      'a. 3⁴ × 3²',
+      'b. 7⁵ / 7²',
+      'c. (2³)²',
+      'd. 10⁻²',
+      'Hitung nilai dari:',
+      'a. 5⁻¹ / 5⁻³',
+      'b. (4⁻²) × (4³)',
+      'Jelaskan mengapa a⁰ = 1 untuk a ≠ 0, dan berikan contoh.'
+    ]
+  },
+  {
+    id: 'refleksi',
+    title: '🔍 Refleksi Pembelajaran',
+    color: 'refleksi',
+    text: [
+      'Apa perbedaan antara bilangan berpangkat positif dan negatif?',
+      'Bagaimana sifat-sifat bilangan berpangkat membantu menyederhanakan perhitungan?'
+    ]
+  }
+];
+
+let iMateri=0,iStep=0;
+const container=document.getElementById('content');
+
+/* AKTIF TOMBOL */
+function setActiveButton(id){
+ document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+ document.querySelector('.'+id)?.classList.add('active');
+}
+
+/* MAJU */
+
+function showNext(){
+ if(iMateri >= materi.length) return;
+
+ const m = materi[iMateri];
+ let s = document.getElementById(m.id);
+
+ if(!s){
+  s = document.createElement('div');
+  s.className = `section ${m.color}`;
+  s.id = m.id;
+  s.innerHTML = `<h3>${m.title}</h3>`;
+  container.appendChild(s);
+  setActiveButton(m.id);
+ }
+
+ if(iStep < m.text.length){
+  const raw = m.text[iStep++];
+
+  // ✅ AMBIL SEMUA GAMBAR [[img:...]]
+  const imgs = [...raw.matchAll(/\[\[img:(.+?)\]\]/g)];
+
+  // ✅ AMBIL TEKS TANPA IMG
+  const txt = raw.replace(/\[\[img:.+?\]\]/g,'').trim();
+
+  // ✅ TAMPILKAN TEKS
+  if(txt){
+   const p = document.createElement('p');
+   p.textContent = txt;
+   s.appendChild(p);
+  }
+
+  // ✅ TAMPILKAN GAMBAR
+  imgs.forEach(match=>{
+   const img = document.createElement('img');
+   img.src = match[1];           // contoh: img/1.jpg
+   img.className = 'step-img';
+   img.loading = 'lazy';
+   img.onerror = ()=>{
+     img.alt = 'Gambar tidak ditemukan: ' + match[1];
+   };
+   s.appendChild(img);
+  });
+
+ }else{
+  iMateri++;
+  iStep = 0;
+  showNext();
+ }
+}
+
+
+/* MUNDUR */
+function showPrev(){
+ if(iMateri<0) return;
+ const m=materi[iMateri];
+ const s=document.getElementById(m.id);
+ if(s && s.children.length>1){
+  s.removeChild(s.lastElementChild);
+  iStep--;
+  setActiveButton(m.id);
+ }else if(iMateri>0){
+  iMateri--;
+  iStep=materi[iMateri].text.length;
+  showPrev();
+ }
+}
+
+/* NAV */
+function nextCol(){showNext();}
+function prevCol(){showPrev();}
+
+/* TAP = MAJU */
+document.addEventListener('pointerup',e=>{
+ if(!e.target.closest('button')) showNext();
+});
+</script>
+
+</body>
+</html>
